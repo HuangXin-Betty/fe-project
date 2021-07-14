@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="demo.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+    <form name="myForm" action="view.html" onsubmit="return validateForm()" method="get" target="_blank">
+        名字: <input type="text" name="fname">
+        <input type="submit" value="提交">
+    </form>
+    <hr>
+
+    <form action="view.html" method="post">
+        <input type="text" name="fname" required="required">
+        <input type="submit" value="提交">
+    </form>
+    <hr>
+
+    <input id="id1" type="number" min="100" max="300" required>
+    <button onclick="myFunction()">验证</button>
+    <p id="demo"></p>
+    <hr>
+
+    <p id="inMethod"></p>
+    <p id="inGlobal"></p>
+    <p id="inFunc"></p>
+    <hr>
+
+    <h3 id="namecontext"></h3>
+    <hr>
+    
+    <h1 id="div1"></h1>
+    <h2 id="div2"></h2>
+    <button onclick="viewDetial()">View Detial</button>
+    <hr>
+
+    <h4 id="callself"></h4>
+    <hr>
+
+    <div id="navigatorExample"></div>
+    <hr>
+
+    <button onclick="confirmDialog()">are you sure</button>
+    <p id="msg"></p>
+    <button onclick="alertDialog()">popup alert</button>
+    <button onclick="promptDialog()">popup prompt</button>
+    <div id="pro"></div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="#top">go to top</a>
+    <br>
+    <a href="#id1">go to test number function</a>
+    
+    <script>
+        function validateForm() {
+            var x = document.forms["myForm"]["fname"].value;
+            if (x == null || x == "") {
+                alert("需要输入名字。");
+                return false;
+            }
+        }
+        
+        function myFunction() {
+            // var inpObj = document.getElementById("id1");
+            // if (inpObj.checkValidity() == false) {
+            //     document.getElementById("demo").innerHTML = inpObj.validationMessage;
+            // }
+            var inpObj = document.getElementById("id1");
+            inpObj.setCustomValidity(''); // 取消自定义提示的方式
+            if (inpObj.checkValidity() == false) {
+                if (inpObj.value=="") {
+                    inpObj.setCustomValidity("不能为空！");
+                } else if (inpObj.value<100 || inpObj.value>300){
+                    inpObj.setCustomValidity("请重新输入数值（100~300之间）!");
+                }
+                document.getElementById("demo").innerHTML = inpObj.validationMessage;
+            } else {
+                document.getElementById("demo").innerHTML = "输入正确";
+            }
+        }
+
+        var person = {
+            firstName: "John",
+            lastName : "Doe",
+            id       : 5566,
+            fullName : function() {
+                return this.firstName + " " + this.lastName;
+            }
+        };
+        document.getElementById('inMethod').innerHTML=person.fullName();
+        
+        var x = this;
+        document.getElementById('inGlobal').innerHTML = x.person.id;
+
+        function testFunction() {
+            return this;
+        }
+        document.getElementById('inFunc').innerHTML = testFunction();
+
+        //  显示函数绑定
+        var person1 = {
+            fullName: function() {
+                return this.firstName + " " + this.lastName;
+            }
+        }
+        var person2 = {
+            firstName:"John",
+            lastName: "Doe",
+        }
+        document.getElementById("namecontext").innerHTML=person1.fullName.call(person2);  // 返回 "John Doe"
+    
+        // 自调用
+        (function add(a, b) {
+            // alert("nobody call me!!");
+            document.getElementById("callself").innerHTML = a + '+' + b + "= " + (a + b);
+        })(5, 6)
+
+        // history.go(num) 可以跳转/刷新页面
+        // num: 1 - 前进一个页面
+        //      2 - 后退一个页面
+        //      0 - 刷新页面
+
+        // 来自 navigator 对象的信息具有误导性，不应该被用于检测浏览器版本
+        txt = "<p>浏览器代号: " + navigator.appCodeName + "</p>";
+        txt+= "<p>浏览器名称: " + navigator.appName + "</p>";
+        txt+= "<p>浏览器版本: " + navigator.appVersion + "</p>";
+        txt+= "<p>启用Cookies: " + navigator.cookieEnabled + "</p>";
+        txt+= "<p>硬件平台: " + navigator.platform + "</p>";
+        txt+= "<p>用户代理: " + navigator.userAgent + "</p>";
+        txt+= "<p>用户代理语言: " + navigator.language + "</p>";
+        document.getElementById("navigatorExample").innerHTML=txt;
+
+        // popup dialog
+        function confirmDialog() {
+            let x = confirm("click YES if you are sure!");
+            if (x==true) {
+                document.getElementById("msg").innerHTML = "sure!!!";
+            } else {
+                document.getElementById("msg").innerHTML = "no! not sure!!!";
+            } 
+        }
+        function alertDialog() {
+            alert("i am alert dialog!")
+        }
+        function promptDialog() {
+            let y = prompt("please enter your name");
+            let ele = document.createElement("h1");
+            let text;
+            if (!!y) {
+                text = document.createTextNode("Hello " + y);
+                ele.appendChild(text);
+
+                document.getElementById("pro").appendChild(ele)
+            }
+        }
+    </script>
+</body>
+</html>
